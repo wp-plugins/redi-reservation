@@ -1,17 +1,17 @@
 <?php
 /*
   Plugin Name: ReDi Reservation
-  Plugin URI: http://reservation.eu/eng/reservation-wordpress-plugin/
-  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places suuch restaurnats, bars, saunas, foto studios, billiards, bowlings and so on to receive reservations from clients online. Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation.
-  Version: 0.1
-  Author: Aleksei Prokopov
-  Author URI: http://reservation.eu/
+  Plugin URI: http://reservationdiary.eu/eng/reservation-wordpress-plugin/
+  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places suuch restaurnats, bars, saunas, foto studios, billiards, bowlings and so on to receive reservations from clients online. Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. To activate: Create new page and place {redi} in page content.
+  Version: 12.0311
+  Author: reservationdiary.eu
+  Author URI: http://reservationdiary.eu/
 
  */
 
 define("REDIAPI", "http://provider.reservationdiary.eu/eng/api/");
 define('REDI_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('REDI_DEBUG', true);
+define('REDI_DEBUG', false);
 
 if (!class_exists('ReDiReservation'))
 {
@@ -19,7 +19,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '0.0.1';
+        var $version = '12.0311';
 
         /**
          * @var string The options string name for this plugin
@@ -100,8 +100,11 @@ if (!class_exists('ReDiReservation'))
 
             $places = $this->get('places');
             $content .= $this->getplaces($places);
+            
+            
             $content .= '<div id="category_div">';
             $first_place = $places[0]->ID;
+            $content .= '<input type="hidden" id="place_id" value="'.$first_place.'"/>';
             $categories = $this->get('categories/' . $first_place);
             $content .= $this->getcategories($categories);
 
@@ -112,14 +115,17 @@ if (!class_exists('ReDiReservation'))
             $endTime = date('G:i', strtotime('+30 minutes'));
 
             $first_category = $categories[0]->ID;
+            $content .= '<input type="hidden" id="category_id" value="'.$first_category.'"/>';
             $services = $this->get(
                     'services/' . $first_category, '&startDate=' . urlencode($startDate . ' ' . $startTime) .
                     '&endDate=' . urlencode($endDate . ' ' . $endTime)
             );
 
             $content .= '</div>';
-            $content .= '<br/><input type="text" value="' . $startDate . '" name="startDate" id="startDate"/> <input id="startTime" type="text" value="' . $startTime . '" name="startTime"/><br/>';
+            $content .= '<label for="startDate">Time and date: </label><br/>';
+            $content .= '<input type="text" value="' . $startDate . '" name="startDate" id="startDate"/> <input id="startTime" type="text" value="' . $startTime . '" name="startTime"/><br/>';
             $content .= '<input type="text" value="' . $endDate . '" name="endDate" id="endDate"/> <input id="endTime" type="text" value="' . $endTime . '" name="endTime"/>';
+            $content .= '<br/><label for="services_div">Services: </label><br/>';
             $content .= $this->getservices($services);
             $content .= $this->user_info_form();
             return $content . '</form>';
@@ -164,7 +170,7 @@ if (!class_exists('ReDiReservation'))
             foreach ((array) $services as $service)
             {
                 $content .='<tr class="service_status_' . $service->Status . '">' .
-                        '<td><input type="checkbox" ' . ($service->Status = 'service_status_NON_WORKING_TIME' ? 'disabled="disabled"' : '') . ' name="service[]" value="' . $service->ID . '" /></td>' .
+                        '<td><input type="checkbox" ' . ($service->Status == 'service_status_NON_WORKING_TIME' ? 'disabled="disabled"' : '') . ' name="service[]" value="' . $service->ID . '" /></td>' .
                         '<td>' . $service->Name . '</td><td>' . $service->Comments . '</td></tr>';
             }
             $content .= '</table></div>';
@@ -174,7 +180,7 @@ if (!class_exists('ReDiReservation'))
 
         public function getcategories($categories)
         {
-            $content = '<select id="category" name="category" class="category">';
+            $content = '<label for="category">Category: </label><br/><select id="category" name="category" class="category">';
             foreach ((array) $categories as $category)
             {
                 $content .='<option value="' . $category->ID . '">' . $category->Name . '</option>';
@@ -187,7 +193,7 @@ if (!class_exists('ReDiReservation'))
         public function get($func, $params="")
         {
             $url = REDIAPI . $func . '?apikey=' . $this->options['key'] . $params;
-
+           // var_dump($url);
             set_error_handler(
                     create_function(
                             '$severity, $message, $file, $line', 'throw new ErrorException($message, $severity, $severity, $file, $line);'
@@ -223,7 +229,7 @@ if (!class_exists('ReDiReservation'))
 
         public function getplaces($places)
         {
-            $content = '<select name="place" id="place">';
+            $content = '<label for="place">Place: </label><br/><select name="place" id="place">';
             foreach ((array) $places as $place)
             {
                 $content .='<option value="' . $place->ID . '">' . $place->Name . '</option>';
@@ -254,19 +260,18 @@ if (!class_exists('ReDiReservation'))
             wp_enqueue_style('redistyle');
             wp_register_script('redi', REDI_PLUGIN_URL . 'redi.js', array('jquery'));
             wp_enqueue_script('redi');
-            wp_enqueue_style('jquery-ui-datepicker', get_bloginfo('template_directory') . '/jquery-ui-datepicker/jquery-ui-1.8.16.custom.min.js', array('jquery'));
-
+            //wp_enqueue_style('jquery-ui-datepicker', get_bloginfo('template_directory') . '/jquery-ui-datepicker/jquery-ui-1.8.16.custom.min.js', array('jquery'));
+            wp_enqueue_script('jquery-ui-datepicker');
+            wp_register_style('jquery-ui-custom-style', REDI_PLUGIN_URL.'/css/custom-theme/jquery-ui-1.8.18.custom.css');
+            wp_enqueue_style('jquery-ui-custom-style');
             wp_localize_script('redi', 'MyAjax', array(
                 // URL to wp-admin/admin-ajax.php to process the request
                 'ajaxurl' => admin_url('admin-ajax.php')
                     )
             );
-//            wp_register_style('timepicker-addon-style', REDI_PLUGIN_URL . '/lib/datetimepicker/css/jquery-ui-timepicker-addon.css');
-//            wp_enqueue_style('timepicker-addon-style');
-            //           wp_register_script('timepicker-addon-js', REDI_PLUGIN_URL . 'lib/datetimepicker/js/jquery-ui-timepicker-addon.js', array('jquery', 'jquery-ui-datepicker', 'jquery-ui-slider'));
-            //           wp_enqueue_script('timepicker-addon-js');
+            wp_enqueue_script('timepicker-addon-js');
 
-            wp_register_style('jquery_ui', plugins_url('styles/jquery-ui-1.8.2.custom.css', __FILE__));
+            wp_register_style('jquery_ui', null, __FILE__);//plugins_url('styles/jquery-ui-1.8.2.custom.css')
             wp_enqueue_style('jquery_ui');
             add_action('wp_ajax_nopriv_redi-submit', array(&$this, 'redi_ajax'));
             add_action('wp_ajax_redi-submit', array(&$this, 'redi_ajax'));
@@ -361,7 +366,7 @@ if (!class_exists('ReDiReservation'))
                 <div class="icon32" id="icon-options-general"><br/></div>
                 <h2>Redi Reservation</h2>
 
-                <p>To optain API key plase register at <a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx">http://www.reservationdiary.eu/ProviderHome/Register.aspx</a></p>
+                <p>To optain API key plase register at <a href="http://reservationdiary.eu/eng/reservation-wordpress-plugin/">http://reservationdiary.eu/eng/reservation-wordpress-plugin/</a></p>
                 <form method="post" id="wp_paginate_options">
 
                     <table class="form-table">
