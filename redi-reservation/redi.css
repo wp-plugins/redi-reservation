@@ -1,0 +1,26 @@
+/* 
+    Document   : redi
+    Created on : 10.02.2012, 20:57:12
+    Author     : roboter
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+.service_status_WORKING_TIME { 
+    background: green;
+}
+
+.service_status_NON_WORKING_TIME { 
+    background: gray;
+}
+
+
+.required {
+    color: #FF4B33;
+    font-weight: bold;
+}
