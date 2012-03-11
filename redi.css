@@ -11,12 +11,21 @@
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
-.service_status_WORKING_TIME { 
-    background: green;
+.service_status_AVAILABLE { 
+    background: #FEFEE4;
 }
 
-.service_status_NON_WORKING_TIME { 
-    background: gray;
+.service_status_RESERVED,
+.service_status_MIXED
+{
+    
+    background: #F2DFAC;
+}
+
+.service_status_NON_WORKING_TIME,
+.service_status_OUT_OF_ORDER,
+.service_status_UNKNOWN { 
+    background: #EEEEEE;
 }
 
 

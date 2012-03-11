@@ -100,11 +100,11 @@ if (!class_exists('ReDiReservation'))
 
             $places = $this->get('places');
             $content .= $this->getplaces($places);
-            
-            
+
+
             $content .= '<div id="category_div">';
             $first_place = $places[0]->ID;
-            $content .= '<input type="hidden" id="place_id" value="'.$first_place.'"/>';
+            $content .= '<input type="hidden" id="place_id" value="' . $first_place . '"/>';
             $categories = $this->get('categories/' . $first_place);
             $content .= $this->getcategories($categories);
 
@@ -115,7 +115,7 @@ if (!class_exists('ReDiReservation'))
             $endTime = date('G:i', strtotime('+30 minutes'));
 
             $first_category = $categories[0]->ID;
-            $content .= '<input type="hidden" id="category_id" value="'.$first_category.'"/>';
+            $content .= '<input type="hidden" id="category_id" value="' . $first_category . '"/>';
             $services = $this->get(
                     'services/' . $first_category, '&startDate=' . urlencode($startDate . ' ' . $startTime) .
                     '&endDate=' . urlencode($endDate . ' ' . $endTime)
@@ -170,7 +170,14 @@ if (!class_exists('ReDiReservation'))
             foreach ((array) $services as $service)
             {
                 $content .='<tr class="service_status_' . $service->Status . '">' .
-                        '<td><input type="checkbox" ' . ($service->Status == 'service_status_NON_WORKING_TIME' ? 'disabled="disabled"' : '') . ' name="service[]" value="' . $service->ID . '" /></td>' .
+                        '<td><input type="checkbox" ' .
+                        (in_array($service->Status, array(
+                            'service_status_NON_WORKING_TIME',
+                            'service_status_RESERVED',
+                            'service_status_MIXED',
+                            'service_status_OUT_OF_ORDER',
+                            'service_status_UNKNOWN'
+                        )) ? 'disabled="disabled"' : '') . ' name="service[]" value="' . $service->ID . '" /></td>' .
                         '<td>' . $service->Name . '</td><td>' . $service->Comments . '</td></tr>';
             }
             $content .= '</table></div>';
@@ -193,7 +200,7 @@ if (!class_exists('ReDiReservation'))
         public function get($func, $params="")
         {
             $url = REDIAPI . $func . '?apikey=' . $this->options['key'] . $params;
-           // var_dump($url);
+            // var_dump($url);
             set_error_handler(
                     create_function(
                             '$severity, $message, $file, $line', 'throw new ErrorException($message, $severity, $severity, $file, $line);'
@@ -262,7 +269,7 @@ if (!class_exists('ReDiReservation'))
             wp_enqueue_script('redi');
             //wp_enqueue_style('jquery-ui-datepicker', get_bloginfo('template_directory') . '/jquery-ui-datepicker/jquery-ui-1.8.16.custom.min.js', array('jquery'));
             wp_enqueue_script('jquery-ui-datepicker');
-            wp_register_style('jquery-ui-custom-style', REDI_PLUGIN_URL.'/css/custom-theme/jquery-ui-1.8.18.custom.css');
+            wp_register_style('jquery-ui-custom-style', REDI_PLUGIN_URL . '/css/custom-theme/jquery-ui-1.8.18.custom.css');
             wp_enqueue_style('jquery-ui-custom-style');
             wp_localize_script('redi', 'MyAjax', array(
                 // URL to wp-admin/admin-ajax.php to process the request
@@ -271,7 +278,7 @@ if (!class_exists('ReDiReservation'))
             );
             wp_enqueue_script('timepicker-addon-js');
 
-            wp_register_style('jquery_ui', null, __FILE__);//plugins_url('styles/jquery-ui-1.8.2.custom.css')
+            wp_register_style('jquery_ui', null, __FILE__); //plugins_url('styles/jquery-ui-1.8.2.custom.css')
             wp_enqueue_style('jquery_ui');
             add_action('wp_ajax_nopriv_redi-submit', array(&$this, 'redi_ajax'));
             add_action('wp_ajax_redi-submit', array(&$this, 'redi_ajax'));
