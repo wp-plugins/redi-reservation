@@ -24,7 +24,7 @@ Plugin requires API Key that you will obtain once you register. Additionally you
 In case you have any problems with plugin installation, please don't hesitate to contact us by email: <a href="mailto:info@reservationdiary.eu">info@reservationdiary.eu</a>
 
 == Screenshots ==
-ReDi-Reservation-Sample.png
+1. ReDi-Reservation-Sample.png
 
 == Changelog ==
 
