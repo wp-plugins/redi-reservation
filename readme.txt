@@ -26,6 +26,11 @@ In case you have any problems with plugin installation, please don't hesitate to
 == Screenshots ==
 1. ReDi Reservation Sample
 
+== Upgrade Notice ==
+
+= 12.0321 =
+Cosmetic changes
+
 == Changelog ==
 
 = 12.0321 =
