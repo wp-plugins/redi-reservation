@@ -1,4 +1,4 @@
-=== ReDi Reservation ===
+﻿=== ReDi Reservation ===
 Contributors: thecatkin, robby.roboter
 Tags: reservation diary, reservation, table reservation, restaurnat reservation, bowling reservation, yacht reservation, photo studio reservation, billiard reservation, sauna reservation, car reservation, appartments reservation, hookah reservation, badminton reservation, tennis reservation, conference room reservation, karting reservation, bus reservation, time reservation
 Requires at least: 3.0.0
@@ -24,7 +24,7 @@ Plugin requires API Key that you will obtain once you register in catalogue. Add
 = 12.0307 =
 * Initial version
 
-= 12.0311
+= 12.0311 =
 * fix missing css
 * regestration link fix
 * version fix
