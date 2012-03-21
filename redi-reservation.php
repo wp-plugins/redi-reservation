@@ -110,10 +110,10 @@ if (!class_exists('ReDiReservation'))
             $content .= $this->getcategories($categories);
 
             $startDate = date('Y-m-d', strtotime('+48 hour'));
-            $startTime = date('G:i');
+            $startTime = date('G:00');
 
             $endDate = date('Y-m-d', strtotime('+48 hours 30 minutes'));
-            $endTime = date('G:i', strtotime('+30 minutes'));
+            $endTime = date('G:30');
 
             $first_category = $categories[0]->ID;
             $content .= '<input type="hidden" id="category_id" value="' . $first_category . '"/>';
