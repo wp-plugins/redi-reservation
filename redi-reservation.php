@@ -2,11 +2,13 @@
 /*
   Plugin Name: ReDi Reservation
   Plugin URI: http://reservationdiary.eu/eng/reservation-wordpress-plugin/
-  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places suuch restaurnats, bars, saunas, foto studios, billiards, bowlings and so on to receive reservations from clients online. Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. To activate: Create new page and place {redi} in page content.
-  Version: 12.0311
+  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurnats, 
+  bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online. 
+  Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. 
+  To activate: Create new page and place {redi} in page content.
+  Version: 12.0321
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
-
  */
 
 define("REDIAPI", "http://provider.reservationdiary.eu/eng/api/");
@@ -19,7 +21,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '12.0311';
+        var $version = '12.0321';
 
         /**
          * @var string The options string name for this plugin
@@ -49,7 +51,7 @@ if (!class_exists('ReDiReservation'))
             if (!$options = get_option($this->optionsName))
             {
                 $options = array(
-                    'key' => '',
+                    'key' => '35cfa9ba-8633-46d3-896c-32591c0e0cfc',
                 );
                 update_option($this->optionsName, $options);
             }
@@ -101,7 +103,6 @@ if (!class_exists('ReDiReservation'))
             $places = $this->get('places');
             $content .= $this->getplaces($places);
 
-
             $content .= '<div id="category_div">';
             $first_place = $places[0]->ID;
             $content .= '<input type="hidden" id="place_id" value="' . $first_place . '"/>';
@@ -122,10 +123,10 @@ if (!class_exists('ReDiReservation'))
             );
 
             $content .= '</div>';
-            $content .= '<label for="startDate">Time and date: </label><br/>';
+            $content .= '<br/><label for="startDate">Time and date: </label><br/>';
             $content .= '<input type="text" value="' . $startDate . '" name="startDate" id="startDate"/> <input id="startTime" type="text" value="' . $startTime . '" name="startTime"/><br/>';
             $content .= '<input type="text" value="' . $endDate . '" name="endDate" id="endDate"/> <input id="endTime" type="text" value="' . $endTime . '" name="endTime"/>';
-            $content .= '<br/><label for="services_div">Services: </label><br/>';
+            $content .= '<br/><br/><label for="services_div">Services: </label><br/>';
             $content .= $this->getservices($services);
             $content .= $this->user_info_form();
             return $content . '</form>';
@@ -365,7 +366,7 @@ if (!class_exists('ReDiReservation'))
 
                 $this->save_admin_options();
 
-                echo '<div class="updated"><p>' . __('Success! Your changes were successfully saved!', $this->localizationDomain) . '</p></div>';
+                echo '<div class="updated"><p>' . __('Your changes were successfully saved!', $this->localizationDomain) . '</p></div>';
             }
             ?>
 
@@ -373,14 +374,16 @@ if (!class_exists('ReDiReservation'))
                 <div class="icon32" id="icon-options-general"><br/></div>
                 <h2>Redi Reservation</h2>
 
-                <p>To optain API key plase register at <a href="http://reservationdiary.eu/eng/reservation-wordpress-plugin/">http://reservationdiary.eu/eng/reservation-wordpress-plugin/</a></p>
+				<p>By default DEMO key is provided, so you can test reservation functionality without registration.</p>
+                <p>To optain you own API Key please register at <a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx" target="_blank">Reservation Diary</a><br/>
+				After registration, you will receive API Key by email. Copy API Key into Redi Api Key field and click on Save Changes button.</p>
                 <form method="post" id="wp_paginate_options">
 
                     <table class="form-table">
                         <tr valign="top">
-                            <th scope="row">Redi Api KEY</th>
+                            <th scope="row">API Key</th>
                             <td><input name="key" type="text" id="key" size="40" value="<?php echo stripslashes(htmlspecialchars($this->options['key'])); ?>"/>
-                                <span class="description">API key</span></td>
+                                <span class="description">API Key to access reservation functionality</span></td>
                         </tr>
 
                     </table>

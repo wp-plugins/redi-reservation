@@ -9,23 +9,34 @@ Easy ReDi reservation plugin that allows you to easily manage reservations for y
 
 == Description ==
 
-ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurants, bars, saunas, photo studios, billiards, bowling�s and so on to receive reservations from clients online. Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. 
+ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurants, bars, saunas, photo studios, billiards, bowling's and so on to receive reservations from clients online. Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. 
 
-Plugin requires API Key that you will obtain once you register in catalogue. Additionally you need to setup reservation details, working and non-working times. 
+Plugin requires API Key that you will obtain once you register. Additionally you need to setup reservation details, working and non-working times. 
 
 == Installation ==
 
-1. Click install plugin 
+1. Click on "Install now" to install plugin
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Create new page and place {redi} in page content 
+3. Go to Settings/Redi reservation page
+4. Follow instuctions on the page to setup plugin
+5. Create new page and place {redi} in page content
+
+In case you have any problems with plugin installation, please don't hesitate to contact us by email: <a href="mailto:info@reservationdiary.eu">info@reservationdiary.eu</a>
+
+== Screenshots ==
+ReDi-Reservation-Sample.png
 
 == Changelog ==
 
-= 12.0307 =
-* Initial version
+= 12.0321 =
+* updated link to registration page
+* added DEMO key after plugin activation
 
 = 12.0311 =
 * fix missing css
-* regestration link fix
+* registration link fix
 * version fix
 * debug initial set to off
+
+= 12.0307 =
+* Initial version
