@@ -11,7 +11,7 @@
   Author URI: http://reservationdiary.eu/
  */
 
-define("REDIAPI", "http://provider.reservationdiary.eu/eng/api/");
+define("REDIAPI", "http://provider.reservationdiary.eu/eng/api2/");
 define('REDI_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('REDI_DEBUG', false);
 
@@ -73,7 +73,7 @@ if (!class_exists('ReDiReservation'))
                     $services = '';
                     foreach ((array) $_POST['service'] as $service)
                     {
-                        $services .='&id=' . $service;
+                        $services .='&serviceid=' . $service;
                     }
 
                     if (!(isset($_SESSION['redi_data_send']) && $_SESSION['redi_data_send'] + 30/* TODO change to 5 min */ > time()))
@@ -81,9 +81,10 @@ if (!class_exists('ReDiReservation'))
                         $_SESSION['redi_data_send'] = time();
 
                         $content.= $this->get(
-                                'reserve', '&name=' . urlencode($_POST['Name']) .
+                                'reserve', '?name=' . urlencode($_POST['Name']) .
                                 '&phone=' . urlencode($_POST['Phone']) .
                                 '&email=' . urlencode($_POST['Email']) .
+                                '&comments=' . urlencode($_POST['Comments']) .
                                 $services .
                                 '&startDate=' . urlencode($_POST['startDate'] . ' ' . $_POST['startTime']) .
                                 '&endDate=' . urlencode($_POST['endDate'] . ' ' . $_POST['endTime'])
@@ -106,7 +107,7 @@ if (!class_exists('ReDiReservation'))
             $content .= '<div id="category_div">';
             $first_place = $places[0]->ID;
             $content .= '<input type="hidden" id="place_id" value="' . $first_place . '"/>';
-            $categories = $this->get('categories/' . $first_place);
+            $categories = $this->get('categories', '?placeid='.$first_place);
             $content .= $this->getcategories($categories);
 
             $startDate = date('Y-m-d', strtotime('+48 hour'));
@@ -116,9 +117,9 @@ if (!class_exists('ReDiReservation'))
             $endTime = date('G:30');
 
             $first_category = $categories[0]->ID;
-            $content .= '<input type="hidden" id="category_id" value="' . $first_category . '"/>';
+            
             $services = $this->get(
-                    'services/' . $first_category, '&startDate=' . urlencode($startDate . ' ' . $startTime) .
+                    'services', '?categoryid='.$first_category. '&startDate=' . urlencode($startDate . ' ' . $startTime) .
                     '&endDate=' . urlencode($endDate . ' ' . $endTime)
             );
 
@@ -127,7 +128,7 @@ if (!class_exists('ReDiReservation'))
             $content .= '<input type="text" value="' . $startDate . '" name="startDate" id="startDate"/> <input id="startTime" type="text" value="' . $startTime . '" name="startTime"/><br/>';
             $content .= '<input type="text" value="' . $endDate . '" name="endDate" id="endDate"/> <input id="endTime" type="text" value="' . $endTime . '" name="endTime"/>';
             $content .= '<br/><br/><label for="services_div">Services: </label><br/>';
-            $content .= $this->getservices($services);
+            $content .= $this->getservices($services, $first_category);
             $content .= $this->user_info_form();
             return $content . '</form>';
         }
@@ -165,19 +166,22 @@ if (!class_exists('ReDiReservation'))
             return $content;
         }
 
-        public function getservices($services)
+        public function getservices($services, $first_category)
         {
-            $content = '<div id="services_div"><table>';
+            $content = '<div id="services_div">';
+            $content .= '<input type="hidden" id="category_id" value="' . $first_category . '"/>';
+            $content .='<table>';
             foreach ((array) $services as $service)
             {
+                
                 $content .='<tr class="service_status_' . $service->Status . '">' .
                         '<td><input type="checkbox" ' .
                         (in_array($service->Status, array(
-                            'service_status_NON_WORKING_TIME',
-                            'service_status_RESERVED',
-                            'service_status_MIXED',
-                            'service_status_OUT_OF_ORDER',
-                            'service_status_UNKNOWN'
+                            'NON_WORKING_TIME',
+                            'RESERVED',
+                            'MIXED',
+                            'OUT_OF_ORDER',
+                            'UNKNOWN'
                         )) ? 'disabled="disabled"' : '') . ' name="service[]" value="' . $service->ID . '" /></td>' .
                         '<td>' . $service->Name . '</td><td>' . $service->Comments . '</td></tr>';
             }
@@ -198,10 +202,10 @@ if (!class_exists('ReDiReservation'))
             return $content;
         }
 
-        public function get($func, $params="")
+        public function get($func, $params='')
         {
-            $url = REDIAPI . $func . '?apikey=' . $this->options['key'] . $params;
-            // var_dump($url);
+            $url = REDIAPI .  $func .'/'. $this->options['key']. $params;
+            //var_dump($url);
             set_error_handler(
                     create_function(
                             '$severity, $message, $file, $line', 'throw new ErrorException($message, $severity, $severity, $file, $line);'
@@ -325,7 +329,7 @@ if (!class_exists('ReDiReservation'))
             switch ($_POST['get'])
             {
                 case 'getcategories':
-                    echo $this->getcategories($this->get('categories/' . intval($_POST['place_id'])));
+                    echo $this->getcategories($this->get('categories', '?placeid='.intval($_POST['place_id'])));
                     break;
 
                 case 'services':
@@ -336,10 +340,10 @@ if (!class_exists('ReDiReservation'))
                     $endDate = $_POST['endDate'];
                     $endTime = $_POST['endTime'];
                     $services = $this->get(
-                            'services/' . $category_id, '&startDate=' . urlencode($startDate . ' ' . $startTime) .
+                            'services' , '?categoryid='.$category_id. '&startDate=' . urlencode($startDate . ' ' . $startTime) .
                             '&endDate=' . urlencode($endDate . ' ' . $endTime)
                     );
-                    echo $this->getservices($services);
+                    echo $this->getservices($services, $category_id);
                     break;
             }
 
