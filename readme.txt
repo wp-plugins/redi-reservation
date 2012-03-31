@@ -28,10 +28,15 @@ In case you have any problems with plugin installation, please don't hesitate to
 
 == Upgrade Notice ==
 
-= 12.0321 =
-Cosmetic changes
+= 12.0331 =
+Buf fixes
 
 == Changelog ==
+
+= 12.0331 =
+* Fixed: Reservation Comments are not passing
+* Fixed: When changing category list of services wasn't refreshed
+* Fixed: Allows reservation for already reserved services
 
 = 12.0321 =
 * updated link to registration page
