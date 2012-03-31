@@ -29,7 +29,7 @@ In case you have any problems with plugin installation, please don't hesitate to
 == Upgrade Notice ==
 
 = 12.0331 =
-Buf fixes
+Bug fixes
 
 == Changelog ==
 
