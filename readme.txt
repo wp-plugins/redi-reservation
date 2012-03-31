@@ -37,6 +37,7 @@ Bug fixes
 * Fixed: Reservation Comments are not passing
 * Fixed: When changing category list of services wasn't refreshed
 * Fixed: Allows reservation for already reserved services
+* Added legend map
 
 = 12.0321 =
 * updated link to registration page

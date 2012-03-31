@@ -6,7 +6,7 @@
   bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online. 
   Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. 
   To activate: Create new page and place {redi} in page content.
-  Version: 12.0321
+  Version: 12.0331
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
  */
@@ -21,7 +21,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '12.0321';
+        var $version = '12.0331';
 
         /**
          * @var string The options string name for this plugin
@@ -129,6 +129,7 @@ if (!class_exists('ReDiReservation'))
             $content .= '<input type="text" value="' . $endDate . '" name="endDate" id="endDate"/> <input id="endTime" type="text" value="' . $endTime . '" name="endTime"/>';
             $content .= '<br/><br/><label for="services_div">Services: </label><br/>';
             $content .= $this->getservices($services, $first_category);
+			$content .= $this->getlegend();
             $content .= $this->user_info_form();
             return $content . '</form>';
         }
@@ -165,6 +166,32 @@ if (!class_exists('ReDiReservation'))
         </div>';
             return $content;
         }
+
+        public function getlegend()
+		{
+			$content = '            
+			<div class="table-info">
+                <div class="span-15">
+					<div class="">
+                        <div class="span-1 orange" style="width: 19px; height: 17px;">
+                        </div>
+                        <div class="span-2">
+                            reserved</div>
+                                                
+						<div class="span-1 grey" style="width: 19px; height: 17px;">
+                        </div>
+                        <div class="span-2">
+                            closed</div>
+                        
+						<div class="span-1 selected_non_working" style="width: 19px; height: 17px;">
+                        </div>
+                        <div class="span-2">
+                            unavailable</div>
+                    </div>
+				</div>
+			</div>';
+            return $content;
+		}
 
         public function getservices($services, $first_category)
         {
