@@ -18,7 +18,7 @@
 .service_status_RESERVED,
 .service_status_MIXED
 {
-    
+
     background: #F2DFAC;
 }
 
@@ -28,11 +28,61 @@
     background: #EEEEEE;
 }
 
-
-.required {
+.redi_required {
     color: #FF4B33;
     font-weight: bold;
 }
+
+.redi_status_error
+{
+    background-color: #F3C7C7;
+    color: #016097; 
+    padding:15px; 
+}
+
+.redi_status_success
+{
+    background-color: #EDFBFB;
+    color: #016097; 
+    padding:15px; 
+}
+
+.redi_validation_error
+{
+    color: red;
+}
+
+.redi_button-icon 
+{
+    float: left;
+    height: 17px;
+}
+
+.redi_button 
+{
+    background-color: #D3E7BB;
+    border: medium none;
+    color: #000000;
+    cursor: pointer;
+    display: inline;
+    margin: 5px;
+    padding: 7px 30px;
+    position: relative;
+    text-decoration: none;
+    line-height: 16px;
+}
+
+.redi_icon-print 
+{
+    background-image: url("img/icon-print.png");
+    background-repeat: no-repeat;
+    display: block;
+    float: left;
+    height: 16px;
+    padding-right: 5px;
+    width: 16px;
+}
+
 
 .column, .span-1, .span-2, .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-9, .span-10, .span-11, .span-12, .span-13, .span-14, .span-15, .span-16, .span-17, .span-18, .span-19, .span-20, .span-21, .span-22, .span-23, .span-24 {float:left;margin-right:10px;}
 
@@ -79,3 +129,4 @@
 .span-22 {width:870px;}
 .span-23 {width:910px;}
 .span-24 {width:950px;margin-right:0;}
+

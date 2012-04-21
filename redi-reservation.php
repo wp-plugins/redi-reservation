@@ -2,11 +2,11 @@
 /*
   Plugin Name: ReDi Reservation
   Plugin URI: http://reservationdiary.eu/eng/reservation-wordpress-plugin/
-  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurnats, 
-  bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online. 
-  Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. 
+  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurnats,
+  bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online.
+  Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation.
   To activate: Create new page and place {redi} in page content.
-  Version: 12.0331
+  Version: 12.0421
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
  */
@@ -21,7 +21,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '12.0331';
+        var $version = '12.0421';
 
         /**
          * @var string The options string name for this plugin
@@ -58,80 +58,92 @@ if (!class_exists('ReDiReservation'))
             $this->options = $options;
         }
 
-        /**
-         * Include scripts used by Watermark RELOADED
-         */
         public function content()
         {
+            $post_sucess = false;
             $content = '<form name="redi" method="post">';
             if ($_POST['submit'])
             {
-
                 if ($_POST['Name'] != "" && $_POST['Phone'] != "" && $_POST['Email'] != "")
                 {
 
                     $services = '';
                     foreach ((array) $_POST['service'] as $service)
                     {
-                        $services .='&serviceid=' . $service;
+                        $services .='&serviceid='.$service;
                     }
 
                     if (!(isset($_SESSION['redi_data_send']) && $_SESSION['redi_data_send'] + 30/* TODO change to 5 min */ > time()))
                     {
                         $_SESSION['redi_data_send'] = time();
 
-                        $content.= $this->get(
-                                'reserve', '?name=' . urlencode($_POST['Name']) .
-                                '&phone=' . urlencode($_POST['Phone']) .
-                                '&email=' . urlencode($_POST['Email']) .
-                                '&comments=' . urlencode($_POST['Comments']) .
-                                $services .
-                                '&startDate=' . urlencode($_POST['startDate'] . ' ' . $_POST['startTime']) .
-                                '&endDate=' . urlencode($_POST['endDate'] . ' ' . $_POST['endTime'])
+                        $return_json = $this->get(
+                                'reserve', '?name='.urlencode($_POST['Name']).
+                                '&phone='.urlencode($_POST['Phone']).
+                                '&email='.urlencode($_POST['Email']).
+                                '&comments='.urlencode($_POST['Comments']).
+                                $services.
+                                '&startDate='.urlencode($_POST['startDate'].' '.$_POST['startTime']).
+                                '&endDate='.urlencode($_POST['endDate'].' '.$_POST['endTime'])
                         );
+
+                        
+                        $content.='<p class="redi_status_'.strtolower($return_json->Status).'">'.$return_json->Message.'</p>';
+                        if($return_json->Status == 'SUCCESS')
+                        {
+                            $print_url = 'http://reservationdiary.eu/rus/Client/DiscountTicket/Print/'.$return_json->RefID;
+                            $content .='<div onclick="window.open(\''.$print_url.'\')" class="redi_button redi_button-icon redi_button-print">
+                            <span class="redi_icon-print"></span>
+                            Print reservation ticket
+                            </div><br/>';
+                            $post_sucess = true;
+                        }
                     }
                     else
-                        $content.= '<b style="color:red">Data allready send.</b>';
+                        $content.= '<b class="redi_validation_error">Data allready send.</b>';
                 } else
                 {
-                    $content.= '<b style="color:red">Not all required fields are set.</b>';
+                    $content.= '<b class="redi_validation_error">Not all required fields are set.</b>';
                 }
                 $content.='<br/>';
             }
 
-            date_default_timezone_set('Europe/Minsk');
+            if (!$post_sucess)
+            {
+                date_default_timezone_set('Europe/Minsk');
 
-            $places = $this->get('places');
-            $content .= $this->getplaces($places);
+                $places = $this->get('places');
+                $content .= $this->getplaces($places);
 
-            $content .= '<div id="category_div">';
-            $first_place = $places[0]->ID;
-            $content .= '<input type="hidden" id="place_id" value="' . $first_place . '"/>';
-            $categories = $this->get('categories', '?placeid='.$first_place);
-            $content .= $this->getcategories($categories);
+                $content .= '<div id="category_div">';
+                $first_place = $places[0]->ID;
+                $content .= '<input type="hidden" id="place_id" value="'.$first_place.'"/>';
+                $categories = $this->get('categories', '?placeid='.$first_place);
+                $content .= $this->getcategories($categories);
 
-            $startDate = date('Y-m-d', strtotime('+48 hour'));
-            $startTime = date('G:00');
+                $startDate = date('Y-m-d', strtotime('+48 hour'));
+                $startTime = date('G:00');
 
-            $endDate = date('Y-m-d', strtotime('+48 hours 30 minutes'));
-            $endTime = date('G:30');
+                $endDate = date('Y-m-d', strtotime('+48 hours 30 minutes'));
+                $endTime = date('G:30');
 
-            $first_category = $categories[0]->ID;
-            
-            $services = $this->get(
-                    'services', '?categoryid='.$first_category. '&startDate=' . urlencode($startDate . ' ' . $startTime) .
-                    '&endDate=' . urlencode($endDate . ' ' . $endTime)
-            );
+                $first_category = $categories[0]->ID;
 
-            $content .= '</div>';
-            $content .= '<br/><label for="startDate">Time and date: </label><br/>';
-            $content .= '<input type="text" value="' . $startDate . '" name="startDate" id="startDate"/> <input id="startTime" type="text" value="' . $startTime . '" name="startTime"/><br/>';
-            $content .= '<input type="text" value="' . $endDate . '" name="endDate" id="endDate"/> <input id="endTime" type="text" value="' . $endTime . '" name="endTime"/>';
-            $content .= '<br/><br/><label for="services_div">Services: </label><br/>';
-            $content .= $this->getservices($services, $first_category);
-			$content .= $this->getlegend();
-            $content .= $this->user_info_form();
-            return $content . '</form>';
+                $services = $this->get(
+                        'services', '?categoryid='.$first_category.'&startDate='.urlencode($startDate.' '.$startTime).
+                        '&endDate='.urlencode($endDate.' '.$endTime)
+                );
+
+                $content .= '</div>';
+                $content .= '<br/><label for="startDate">Time and date: </label><br/>';
+                $content .= '<input type="text" value="'.$startDate.'" name="startDate" id="startDate"/> <input id="startTime" type="text" value="'.$startTime.'" name="startTime"/><br/>';
+                $content .= '<input type="text" value="'.$endDate.'" name="endDate" id="endDate"/> <input id="endTime" type="text" value="'.$endTime.'" name="endTime"/>';
+                $content .= '<br/><br/><label for="services_div">Services: </label><br/>';
+                $content .= $this->getservices($services, $first_category);
+				$content .= $this->getlegend();
+                $content .= $this->user_info_form();
+            }
+            return $content.'</form>';
         }
 
         public function user_info_form()
@@ -139,17 +151,17 @@ if (!class_exists('ReDiReservation'))
             //phone
             $content = '<div>
             <div>
-                <label for="Name">Name</label> <span class="required">*</span><br>
+                <label for="Name">Name</label> <span class="redi_required">*</span><br>
                 <input type="text" value="" name="Name" id="Name">
                 <span id="Name_validationMessage" class="field-validation-valid"></span>
             </div>
             <div>
-                <label for="Phone">Phone</label> <span class="required">*</span><br>
+                <label for="Phone">Phone</label> <span class="redi_required">*</span><br>
                 <input type="text" value="" name="Phone" id="Phone">
                 <span id="Phone_validationMessage" class="field-validation-valid"></span>
             </div>
             <div>
-                <label for="Email">Email</label> <span class="required">*</span><br>
+                <label for="Email">Email</label> <span class="redi_required">*</span><br>
                 <input type="text" value="" name="Email" id="Email">
                 <span id="Email_validationMessage" class="field-validation-valid"></span>
             </div>
@@ -196,21 +208,21 @@ if (!class_exists('ReDiReservation'))
         public function getservices($services, $first_category)
         {
             $content = '<div id="services_div">';
-            $content .= '<input type="hidden" id="category_id" value="' . $first_category . '"/>';
+            $content .= '<input type="hidden" id="category_id" value="'.$first_category.'"/>';
             $content .='<table>';
             foreach ((array) $services as $service)
             {
-                
-                $content .='<tr class="service_status_' . $service->Status . '">' .
-                        '<td><input type="checkbox" ' .
+
+                $content .='<tr class="service_status_'.$service->Status.'">'.
+                        '<td><input type="checkbox" '.
                         (in_array($service->Status, array(
                             'NON_WORKING_TIME',
                             'RESERVED',
                             'MIXED',
                             'OUT_OF_ORDER',
                             'UNKNOWN'
-                        )) ? 'disabled="disabled"' : '') . ' name="service[]" value="' . $service->ID . '" /></td>' .
-                        '<td>' . $service->Name . '</td><td>' . $service->Comments . '</td></tr>';
+                        )) ? 'disabled="disabled"' : '').' name="service[]" value="'.$service->ID.'" /></td>'.
+                        '<td>'.$service->Name.'</td><td>'.$service->Comments.'</td></tr>';
             }
             $content .= '</table></div>';
 
@@ -222,7 +234,7 @@ if (!class_exists('ReDiReservation'))
             $content = '<label for="category">Category: </label><br/><select id="category" name="category" class="category">';
             foreach ((array) $categories as $category)
             {
-                $content .='<option value="' . $category->ID . '">' . $category->Name . '</option>';
+                $content .='<option value="'.$category->ID.'">'.$category->Name.'</option>';
             }
             $content.='</select>';
 
@@ -231,7 +243,7 @@ if (!class_exists('ReDiReservation'))
 
         public function get($func, $params='')
         {
-            $url = REDIAPI .  $func .'/'. $this->options['key']. $params;
+            $url = REDIAPI.$func.'/'.$this->options['key'].$params;
             //var_dump($url);
             set_error_handler(
                     create_function(
@@ -247,7 +259,7 @@ if (!class_exists('ReDiReservation'))
                 if (REDI_DEBUG)
                 {
                     echo 'debug:on<br/>';
-                    echo $url . '<br/>';
+                    echo $url.'<br/>';
                     echo $e->getMessage();
                 }
             }
@@ -259,7 +271,7 @@ if (!class_exists('ReDiReservation'))
 
         public function put($func, $params)
         {
-            $url = REDIAPI . $func . '?apikey=' . $this->options['key'] . $params;
+            $url = REDIAPI.$func.'?apikey='.$this->options['key'].$params;
 
             $json = @file_get_contents($url, 0, null, null);
             if ($json)
@@ -271,7 +283,7 @@ if (!class_exists('ReDiReservation'))
             $content = '<label for="place">Place: </label><br/><select name="place" id="place">';
             foreach ((array) $places as $place)
             {
-                $content .='<option value="' . $place->ID . '">' . $place->Name . '</option>';
+                $content .='<option value="'.$place->ID.'">'.$place->Name.'</option>';
             }
             $content.='</select>';
 
@@ -294,24 +306,31 @@ if (!class_exists('ReDiReservation'))
             add_action('init', array(&$this, 'init_sessions'));
             add_action('admin_menu', array(&$this, 'redi_admin_menu_link'));
             add_filter('the_content', array(&$this, 'redi_filter'));
-            wp_register_style('redistyle', REDI_PLUGIN_URL . 'redi.css');
+            wp_register_style('redistyle', REDI_PLUGIN_URL.'redi.css');
 
             wp_enqueue_style('redistyle');
-            wp_register_script('redi', REDI_PLUGIN_URL . 'redi.js', array('jquery'));
-            wp_enqueue_script('redi');
-            //wp_enqueue_style('jquery-ui-datepicker', get_bloginfo('template_directory') . '/jquery-ui-datepicker/jquery-ui-1.8.16.custom.min.js', array('jquery'));
+
+            wp_enqueue_script('timepicker-addon-js');
+
+            wp_register_style('jquery_ui', null, array('jquery')); //plugins_url('styles/jquery-ui-1.8.2.custom.css')
+            wp_enqueue_style('jquery_ui');
+
             wp_enqueue_script('jquery-ui-datepicker');
-            wp_register_style('jquery-ui-custom-style', REDI_PLUGIN_URL . '/css/custom-theme/jquery-ui-1.8.18.custom.css');
+
+
+            wp_register_script('redi', REDI_PLUGIN_URL.'redi.js', array('jquery'));
+            wp_enqueue_script('redi');
+
+            wp_register_style('jquery-ui-custom-style', REDI_PLUGIN_URL.'/css/custom-theme/jquery-ui-1.8.18.custom.css');
             wp_enqueue_style('jquery-ui-custom-style');
             wp_localize_script('redi', 'MyAjax', array(
                 // URL to wp-admin/admin-ajax.php to process the request
                 'ajaxurl' => admin_url('admin-ajax.php')
                     )
             );
-            wp_enqueue_script('timepicker-addon-js');
+            wp_register_script('datetimepicker', REDI_PLUGIN_URL.'/lib/datetimepicker/js/jquery-ui-timepicker-addon.js', array('jquery', 'jquery-ui-core', 'jquery-ui-slider', 'jquery-ui-datepicker'));
+            wp_enqueue_script('datetimepicker');
 
-            wp_register_style('jquery_ui', null, __FILE__); //plugins_url('styles/jquery-ui-1.8.2.custom.css')
-            wp_enqueue_style('jquery_ui');
             add_action('wp_ajax_nopriv_redi-submit', array(&$this, 'redi_ajax'));
             add_action('wp_ajax_redi-submit', array(&$this, 'redi_ajax'));
         }
@@ -327,20 +346,6 @@ if (!class_exists('ReDiReservation'))
                 $content = str_replace('{redi}', $code, $content);
                 return $content;
             }
-        }
-
-        function admin_init()
-        {
-
-            //add_menu_page("Redi Reservation", "Redi Reservation", null, "redi_orders", 'redi_options', PLUGIN_URL . "/img/ico16x16.png");
-            //add_submenu_page("redi_orders", "Settings", "Setinngs", null, "redi_settings", 'redi_options');
-        }
-
-        function redi_options()
-        {
-            echo '<div class="wrap">';
-
-            echo '</div>';
         }
 
         /**
@@ -367,8 +372,8 @@ if (!class_exists('ReDiReservation'))
                     $endDate = $_POST['endDate'];
                     $endTime = $_POST['endTime'];
                     $services = $this->get(
-                            'services' , '?categoryid='.$category_id. '&startDate=' . urlencode($startDate . ' ' . $startTime) .
-                            '&endDate=' . urlencode($endDate . ' ' . $endTime)
+                            'services', '?categoryid='.$category_id.'&startDate='.urlencode($startDate.' '.$startTime).
+                            '&endDate='.urlencode($endDate.' '.$endTime)
                     );
                     echo $this->getservices($services, $category_id);
                     break;
@@ -397,7 +402,7 @@ if (!class_exists('ReDiReservation'))
 
                 $this->save_admin_options();
 
-                echo '<div class="updated"><p>' . __('Your changes were successfully saved!', $this->localizationDomain) . '</p></div>';
+                echo '<div class="updated"><p>'.__('Your changes were successfully saved!', $this->localizationDomain).'</p></div>';
             }
             ?>
 
@@ -405,9 +410,9 @@ if (!class_exists('ReDiReservation'))
                 <div class="icon32" id="icon-options-general"><br/></div>
                 <h2>Redi Reservation</h2>
 
-				<p>By default DEMO key is provided, so you can test reservation functionality without registration.</p>
+                <p>By default DEMO key is provided, so you can test reservation functionality without registration.</p>
                 <p>To optain you own API Key please register at <a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx" target="_blank">Reservation Diary</a><br/>
-				After registration, you will receive API Key by email. Copy API Key into Redi Api Key field and click on Save Changes button.</p>
+                    After registration, you will receive API Key by email. Copy API Key into Redi Api Key field and click on Save Changes button.</p>
                 <form method="post" id="wp_paginate_options">
 
                     <table class="form-table">

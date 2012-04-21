@@ -36,12 +36,23 @@ function update_categories()
 
 $j(function(){
 
-    $j('#startTime').change(function() { 
-        udpate_services();
-    } );
-    $j('#endTime').change(function() { 
-        udpate_services();
-    } );
+    $j('#startTime').timepicker(
+    {
+        stepMinute: 15,
+        onClose:  function(dateText, inst)
+        {
+            udpate_services();
+	}
+    });
+    $j('#endTime').timepicker(
+    {
+        stepMinute: 15,
+        onClose:  function(dateText, inst)
+        {
+            udpate_services();
+	}
+
+    });
     
     $j( "#startDate" ).datepicker({
         dateFormat: 'yy-mm-dd', 
@@ -86,4 +97,5 @@ $j(function(){
             update_categories();
         });
     });
+    
 });
