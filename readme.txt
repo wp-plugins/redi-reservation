@@ -28,10 +28,16 @@ In case you have any problems with plugin installation, please don't hesitate to
 
 == Upgrade Notice ==
 
-= 12.0331 =
-Bug fixes
+= 12.0421 =
+Added time picker, print of reservation ticket and styles for errors and reservation confirmation messages. Form is hided when reservation is accepted.
 
 == Changelog ==
+
+= 12.0421 =
+* Added time picker
+* Added print of reservation ticket
+* Added styles for errors and reservation confirmation messages
+* Form is hided when reservation is accepted
 
 = 12.0331 =
 * Fixed: Reservation Comments are not passing
