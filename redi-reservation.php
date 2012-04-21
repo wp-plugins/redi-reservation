@@ -91,7 +91,7 @@ if (!class_exists('ReDiReservation'))
                         $content.='<p class="redi_status_'.strtolower($return_json->Status).'">'.$return_json->Message.'</p>';
                         if($return_json->Status == 'SUCCESS')
                         {
-                            $print_url = 'http://reservationdiary.eu/rus/Client/DiscountTicket/Print/'.$return_json->RefID;
+                            $print_url = 'http://reservationdiary.eu/eng/Client/DiscountTicket/Print/'.$return_json->RefID;
                             $content .='<div onclick="window.open(\''.$print_url.'\')" class="redi_button redi_button-icon redi_button-print">
                             <span class="redi_icon-print"></span>
                             Print reservation ticket
