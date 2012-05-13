@@ -6,7 +6,7 @@
   bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online.
   Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation.
   To activate: Create new page and place {redi} in page content.
-  Version: 12.0421
+  Version: 12.0513
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
  */
@@ -21,7 +21,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '12.0421';
+        var $version = '12.0513';
 
         /**
          * @var string The options string name for this plugin
@@ -207,7 +207,10 @@ if (!class_exists('ReDiReservation'))
 
         public function getservices($services, $first_category)
         {
-            $content = '<div id="services_div">';
+            $content = '';
+            $content .='<div style="padding-left:300px; display:none; height:50px;" id="loader"><div id="loader_image"></div></div>';
+            $content .= '<div id="services_div">';
+            
             $content .= '<input type="hidden" id="category_id" value="'.$first_category.'"/>';
             $content .='<table>';
             foreach ((array) $services as $service)

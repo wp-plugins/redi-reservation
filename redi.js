@@ -99,3 +99,15 @@ $j(function(){
     });
     
 });
+
+$j.ajaxSetup({
+  beforeSend: function() {
+     $('#loader').show();
+     $('#services_div').hide();
+  },
+  complete: function(){
+     $('#loader').hide();
+     $('#services_div').slideDown('slow');
+  },
+  success: function() {}
+});

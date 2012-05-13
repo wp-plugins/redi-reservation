@@ -130,3 +130,9 @@
 .span-23 {width:910px;}
 .span-24 {width:950px;margin-right:0;}
 
+#loader_image
+{
+    background-image: url("img/ajax-loader.gif");
+    width:25px;
+    height:25px;
+}

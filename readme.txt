@@ -28,10 +28,10 @@ In case you have any problems with plugin installation, please don't hesitate to
 
 == Upgrade Notice ==
 
-= 12.0421 =
-Added time picker, print of reservation ticket and styles for errors and reservation confirmation messages. Form is hided when reservation is accepted.
-
 == Changelog ==
+
+= 12.0513 =
+* ajax loader image
 
 = 12.0421 =
 * Added time picker
