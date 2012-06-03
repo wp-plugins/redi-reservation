@@ -104,7 +104,7 @@ if (!class_exists('ReDiReservation'))
                 } else
                 {
                     $content.= '<b class="redi_validation_error">Not all required fields are set.</b>';
-                }
+                }	
                 $content.='<br/>';
             }
 
@@ -135,7 +135,7 @@ if (!class_exists('ReDiReservation'))
                 );
 
                 $content .= '</div>';
-                $content .= '<br/><label for="startDate">Time and date: </label><br/>';
+                $content .= '<br/><label for="startDate">Date and time: </label><br/>';
                 $content .= '<input type="text" value="'.$startDate.'" name="startDate" id="startDate"/> <input id="startTime" type="text" value="'.$startTime.'" name="startTime"/><br/>';
                 $content .= '<input type="text" value="'.$endDate.'" name="endDate" id="endDate"/> <input id="endTime" type="text" value="'.$endTime.'" name="endTime"/>';
                 $content .= '<br/><br/><label for="services_div">Services: </label><br/>';
@@ -283,7 +283,7 @@ if (!class_exists('ReDiReservation'))
 
         public function getplaces($places)
         {
-            $content = '<label for="place">Place: </label><br/><select name="place" id="place">';
+            $content = '<br/><label for="place">Place: </label><br/><select name="place" id="place">';
             foreach ((array) $places as $place)
             {
                 $content .='<option value="'.$place->ID.'">'.$place->Name.'</option>';
