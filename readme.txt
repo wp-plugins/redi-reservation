@@ -30,6 +30,11 @@ In case you have any problems with plugin installation, please don't hesitate to
 
 == Changelog ==
 
+= 12.0602 =
+* added error handling and displaying
+* fixed some styles
+* added check for demo key, and displayed warning message about registration
+
 = 12.0513 =
 * ajax loader image
 
