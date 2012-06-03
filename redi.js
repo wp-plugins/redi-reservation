@@ -13,8 +13,12 @@ function udpate_services()
     };
             
     jQuery.post(MyAjax.ajaxurl, data, function(response) {
-        $j("#services_div").html(response);
-    });
+
+	if(response.Status =="ERROR")
+		$j("#services_div").html('<div class="redi_validation_error">'+response.Message+'</div>'+response.data);
+	else
+        $j("#services_div").html(response.data);
+    }, "json");
 }
 
 function update_categories()
@@ -30,7 +34,7 @@ function update_categories()
     };
             
     jQuery.post(MyAjax.ajaxurl, data, function(response) {
-        $j("#services_div").html(response);
+		$j("#services_div").html(response.data);
     });
 }
 

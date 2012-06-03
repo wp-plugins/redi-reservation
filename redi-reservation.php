@@ -6,7 +6,7 @@
   bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online.
   Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation.
   To activate: Create new page and place {redi} in page content.
-  Version: 12.0513
+  Version: 12.0603
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
  */
@@ -21,7 +21,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '12.0513';
+        var $version = '12.0603';
 
         /**
          * @var string The options string name for this plugin
@@ -61,7 +61,8 @@ if (!class_exists('ReDiReservation'))
         public function content()
         {
             $post_sucess = false;
-            $content = '<form name="redi" method="post">';
+			 
+            $content = '<!--{version:"'.$this->version.'"}--><form name="redi" method="post">';
             if ($_POST['submit'])
             {
                 if ($_POST['Name'] != "" && $_POST['Phone'] != "" && $_POST['Email'] != "")
@@ -213,20 +214,20 @@ if (!class_exists('ReDiReservation'))
             
             $content .= '<input type="hidden" id="category_id" value="'.$first_category.'"/>';
             $content .='<table>';
-            foreach ((array) $services as $service)
-            {
-
-                $content .='<tr class="service_status_'.$service->Status.'">'.
-                        '<td><input type="checkbox" '.
-                        (in_array($service->Status, array(
-                            'NON_WORKING_TIME',
-                            'RESERVED',
-                            'MIXED',
-                            'OUT_OF_ORDER',
-                            'UNKNOWN'
-                        )) ? 'disabled="disabled"' : '').' name="service[]" value="'.$service->ID.'" /></td>'.
-                        '<td>'.$service->Name.'</td><td>'.$service->Comments.'</td></tr>';
-            }
+			foreach ((array)$services as $service)
+			{
+				$content .='<tr class="service_status_'.$service->Status.'">'.
+						'<td><input type="checkbox" '.
+						(in_array($service->Status, array(
+							'NON_WORKING_TIME',
+							'RESERVED',
+							'MIXED',
+							'OUT_OF_ORDER',
+							'UNKNOWN'
+						)) ? 'disabled="disabled"' : '').' name="service[]" value="'.$service->ID.'" /></td>'.
+						'<td>'.$service->Name.'</td><td>'.$service->Comments.'</td></tr>';
+			}
+			
             $content .= '</table></div>';
 
             return $content;
@@ -234,13 +235,17 @@ if (!class_exists('ReDiReservation'))
 
         public function getcategories($categories)
         {
-            $content = '<label for="category">Category: </label><br/><select id="category" name="category" class="category">';
-            foreach ((array) $categories as $category)
-            {
-                $content .='<option value="'.$category->ID.'">'.$category->Name.'</option>';
-            }
-            $content.='</select>';
-
+			if(is_array($categories) && count($categories) > 1)
+			{
+				$content = '<label for="category">Category: </label><br/>
+				<select id="category" name="category" class="category">';
+				foreach ( $categories as $category)
+				{
+					$content .='<option value="'.$category->ID.'">'.$category->Name.'</option>';
+				}
+				$content.='</select>';
+			}
+	
             return $content;
         }
 
@@ -283,12 +288,17 @@ if (!class_exists('ReDiReservation'))
 
         public function getplaces($places)
         {
-            $content = '<br/><label for="place">Place: </label><br/><select name="place" id="place">';
-            foreach ((array) $places as $place)
-            {
-                $content .='<option value="'.$place->ID.'">'.$place->Name.'</option>';
-            }
-            $content.='</select>';
+			$places = $places[0];
+			
+			if(is_array($places) && count($places) > 1)
+			{
+				$content = '<br/><label for="place">Place: </label><br/><select name="place" id="place">';
+				foreach ( $places as $place)
+				{
+					$content .='<option value="'.$place->ID.'">'.$place->Name.'</option>';
+				}
+				$content.='</select>';
+			}
 
             return $content;
         }
@@ -378,7 +388,13 @@ if (!class_exists('ReDiReservation'))
                             'services', '?categoryid='.$category_id.'&startDate='.urlencode($startDate.' '.$startTime).
                             '&endDate='.urlencode($endDate.' '.$endTime)
                     );
-                    echo $this->getservices($services, $category_id);
+					if($services->Status == 'ERROR')
+					{
+						$services->data = '<input type="hidden" id="category_id" value="'.$category_id.'"/>';
+						echo json_encode($services);
+					}
+					else
+                    echo json_encode (array('data' => $this->getservices($services, $category_id)));
                     break;
             }
 
