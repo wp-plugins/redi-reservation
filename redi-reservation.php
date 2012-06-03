@@ -61,8 +61,12 @@ if (!class_exists('ReDiReservation'))
         public function content()
         {
             $post_sucess = false;
-			 
-            $content = '<!--{version:"'.$this->version.'"}--><form name="redi" method="post">';
+			$content = '';
+			if($this->options['key'] == '35cfa9ba-8633-46d3-896c-32591c0e0cfc')
+			{
+			$content ='<div class="redi_validation_error">This is demo account. <br/>Please change API key in admin panel of redi plugin. <br/>You need to register your API key at <br/><a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx">http://www.reservationdiary.eu/ProviderHome/Register.aspx</a> </div>';
+			}
+            $content .= '<!--{version:"'.$this->version.'"}--><form name="redi" method="post">';
             if ($_POST['submit'])
             {
                 if ($_POST['Name'] != "" && $_POST['Phone'] != "" && $_POST['Email'] != "")
