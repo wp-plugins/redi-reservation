@@ -64,7 +64,10 @@ if (!class_exists('ReDiReservation'))
 			$content = '';
 			if($this->options['key'] == '35cfa9ba-8633-46d3-896c-32591c0e0cfc')
 			{
-			$content ='<div class="redi_validation_error">This is demo account. <br/>Please change API key in admin panel of redi plugin. <br/>You need to register your API key at <br/><a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx">http://www.reservationdiary.eu/ProviderHome/Register.aspx</a> </div>';
+			$content ='<div class="redi_validation_error">This is a demo account. <br/>
+			You need to register to obtain your API key at <br/>
+			<a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx">http://www.reservationdiary.eu/ProviderHome/Register.aspx</a><br/>
+			<br/><br/>When you receive API key by email, please set it in admin panel of redi plugin.<br/></div>';
 			}
             $content .= '<!--{version:"'.$this->version.'"}--><form name="redi" method="post">';
             if ($_POST['submit'])
