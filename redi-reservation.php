@@ -438,7 +438,17 @@ if (!class_exists('ReDiReservation'))
 
                 <p>By default DEMO key is provided, so you can test reservation functionality without registration.</p>
                 <p>To optain you own API Key please register at <a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx" target="_blank">Reservation Diary</a><br/>
-                    After registration, you will receive API Key by email. Copy API Key into Redi Api Key field and click on Save Changes button.</p>
+                    After registration, you will receive API Key by email. Copy API Key into Redi Api Key field and click on Save Changes button.</p><br />
+					<div style="border-bottom-left-radius: 3px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+  background-color: #FFFBCC;
+    border-color: #E6DB55;
+    color: #555555;
+ padding:5px">
+					<b>We need your feeback!</b> Please feel free to contact us at <a href="mailto:info@reservationdiary.eu">info@reservationdiary.eu</a> and send us request what you need. Please contact us if you would need any customization in plugin.
+					</div>
                 <form method="post" id="wp_paginate_options">
 
                     <table class="form-table">
