@@ -6,7 +6,7 @@
   bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online.
   Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation.
   To activate: Create new page and place {redi} in page content.
-  Version: 12.0603
+  Version: 12.1021
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
  */
