@@ -21,7 +21,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '12.0603';
+        var $version = '12.1021';
 
         /**
          * @var string The options string name for this plugin
@@ -436,6 +436,7 @@ if (!class_exists('ReDiReservation'))
                 <div class="icon32" id="icon-options-general"><br/></div>
                 <h2>Redi Reservation</h2>
 
+                           
                 <p>By default DEMO key is provided, so you can test reservation functionality without registration.</p>
                 <p>To optain you own API Key please register at <a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx" target="_blank">Reservation Diary</a><br/>
                     After registration, you will receive API Key by email. Copy API Key into Redi Api Key field and click on Save Changes button.</p><br />
@@ -447,9 +448,9 @@ if (!class_exists('ReDiReservation'))
     border-color: #E6DB55;
     color: #555555;
  padding:5px">
-					<b>We need your feeback!</b> Please feel free to contact us at <a href="mailto:info@reservationdiary.eu">info@reservationdiary.eu</a> and send us request what you need. Please contact us if you would need any customization in plugin.
+					<b>We need your feeback!</b> Please feel free to contact us at <a href="mailto:info@reservationdiary.eu">info@reservationdiary.eu</a> and provide us what you need.
 					</div>
-                <form method="post" id="wp_paginate_options">
+<form method="post" id="wp_paginate_options">
 
                     <table class="form-table">
                         <tr valign="top">

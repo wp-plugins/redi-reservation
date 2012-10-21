@@ -2,7 +2,7 @@
 Contributors: thecatkin, robby.roboter
 Tags: reservation diary, reservation, table reservation, restaurnat reservation, bowling reservation, yacht reservation, photo studio reservation, billiard reservation, sauna reservation, car reservation, appartments reservation, hookah reservation, badminton reservation, tennis reservation, conference room reservation, karting reservation, bus reservation, time reservation
 Requires at least: 3.0.0
-Tested up to: 3.3.1
+Tested up to: 3.4
 Stable tag: trunk
 
 Easy ReDi reservation plugin that allows you to easily manage reservations for your business.
@@ -21,7 +21,7 @@ Plugin requires API Key that you will obtain once you register. Additionally you
 4. Follow instuctions on the page to setup plugin
 5. Create new page and place {redi} in page content
 
-In case you have any problems with plugin installation, please don't hesitate to contact us by email: <a href="mailto:info@reservationdiary.eu">info@reservationdiary.eu</a>
+In case you have any problems with plugin installation or you need some customization, please don't hesitate to contact us by email: <a href="mailto:info@reservationdiary.eu">info@reservationdiary.eu</a>
 
 == Screenshots ==
 1. ReDi Reservation Sample
@@ -29,6 +29,11 @@ In case you have any problems with plugin installation, please don't hesitate to
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 12.1021 =
+* fixed bug when services was not reloaded correctly when category is changed
+* added cosmetic change, when user selects start date, end date is set
+* added cosmetic change, when user selects start time, end time is set to the same value plus 30 min to the same value
 
 = 12.0602 =
 * added error handling and displaying

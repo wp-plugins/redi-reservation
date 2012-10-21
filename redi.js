@@ -1,5 +1,18 @@
 var $j = jQuery.noConflict();
-function udpate_services()
+
+function parseTime(timeString)
+{
+  if (timeString == '') return null;
+  var d = new Date();
+  var time = timeString.match(/(\d+)(:(\d\d))?\s*(p?)/i);
+
+  d.setHours( parseInt(time[1],10) + ( ( parseInt(time[1],10) < 12 && time[4] ) ? 12 : 0) );
+  d.setMinutes( parseInt(time[3],10) || 0 );
+  d.setSeconds(0, 0);
+  return d;
+}
+
+function update_services()
 {
     var data = {
         action: 'redi-submit',
@@ -21,23 +34,6 @@ function udpate_services()
     }, "json");
 }
 
-function update_categories()
-{
-    var data = {
-        action: 'redi-submit',
-        get: 'services',
-        startDate: $j('#startDate').val(),
-        endDate: $j('#endDate').val(),
-        startTime: $j('#startTime').val(),
-        endTime: $j('#endTime').val(),
-        category_id: $j("#category_id").val()
-    };
-            
-    jQuery.post(MyAjax.ajaxurl, data, function(response) {
-		$j("#services_div").html(response.data);
-    });
-}
-
 $j(function(){
 
     $j('#startTime').timepicker(
@@ -45,7 +41,27 @@ $j(function(){
         stepMinute: 15,
         onClose:  function(dateText, inst)
         {
-            udpate_services();
+			timestr = $j('#startTime').val();
+			
+			time = parseTime(timestr);
+			time.setMinutes(time.getMinutes() + 30);
+			
+			leadingHours = "";
+			leadingMins = "";
+			
+			if (time.getHours() < 10)
+			{
+				leadingHours = "0";
+			}
+			
+			if (time.getMinutes() < 10)
+			{
+				leadingMins = "0";
+			}
+			
+			$j('#endTime').val(leadingHours + time.getHours() + ':' + leadingMins + time.getMinutes());
+
+			update_services();
 	}
     });
     $j('#endTime').timepicker(
@@ -53,7 +69,7 @@ $j(function(){
         stepMinute: 15,
         onClose:  function(dateText, inst)
         {
-            udpate_services();
+            update_services();
 	}
 
     });
@@ -61,13 +77,14 @@ $j(function(){
     $j( "#startDate" ).datepicker({
         dateFormat: 'yy-mm-dd', 
         onSelect: function(dateText, inst){
-            udpate_services();
+			$j('#endDate').val($j('#startDate').val());
+            update_services();
         } 
     });
     $j( "#endDate" ).datepicker({
         dateFormat: 'yy-mm-dd',
         onSelect: function(dateText, inst){
-            udpate_services();
+            update_services();
         }
     });
      
@@ -88,7 +105,7 @@ $j(function(){
                 //update services
                 $j("#category option:selected").each(function () {
                     $j('#category_id').val($j(this).val());
-                    update_categories();
+                    update_services();
                 });
             });
         }); 
@@ -98,7 +115,7 @@ $j(function(){
 
         $j("#category option:selected").each(function () {
             $j('#category_id').val($j(this).val());
-            update_categories();
+            update_services();
         });
     });
     
