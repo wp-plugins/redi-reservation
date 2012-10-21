@@ -32,8 +32,8 @@ In case you have any problems with plugin installation or you need some customiz
 
 = 12.1021 =
 * fixed bug when services was not reloaded correctly when category is changed
-* added cosmetic change, when user selects start date, end date is set
-* added cosmetic change, when user selects start time, end time is set to the same value plus 30 min to the same value
+* added cosmetic change, when user selects start date, end date is set to the same value
+* added cosmetic change, when user selects start time, end time is set to the same value plus 30 min
 
 = 12.0602 =
 * added error handling and displaying
