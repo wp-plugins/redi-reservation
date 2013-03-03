@@ -193,18 +193,15 @@ if (!class_exists('ReDiReservation'))
 					<div class="">
                         <div class="span-1 orange" style="width: 19px; height: 17px;">
                         </div>
-                        <div class="span-2">
-                            reserved</div>
+                        <div class="span-2" style="white-space: nowrap">reserved</div>
                                                 
 						<div class="span-1 grey" style="width: 19px; height: 17px;">
                         </div>
-                        <div class="span-2">
-                            closed</div>
+                        <div class="span-2" style="white-space: nowrap">closed</div>
                         
 						<div class="span-1 selected_non_working" style="width: 19px; height: 17px;">
                         </div>
-                        <div class="span-2">
-                            unavailable</div>
+                        <div class="span-2" style="white-space: nowrap">unavailable</div>
                     </div>
 				</div>
 			</div>';
