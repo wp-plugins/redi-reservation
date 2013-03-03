@@ -6,12 +6,12 @@
   bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online.
   Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation.
   To activate: Create new page and place {redi} in page content.
-  Version: 12.1021
+  Version: 13.0303
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
  */
 
-define("REDIAPI", "http://provider.reservationdiary.eu/eng/api2/");
+define('REDIAPI', 'http://provider.reservationdiary.eu/eng/api2/');
 define('REDI_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('REDI_DEBUG', false);
 
@@ -21,7 +21,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '12.1021';
+        var $version = '13.0303';
 
         /**
          * @var string The options string name for this plugin
@@ -60,19 +60,19 @@ if (!class_exists('ReDiReservation'))
 
         public function content()
         {
-            $post_sucess = false;
+            $post_success = false;
 			$content = '';
 			if($this->options['key'] == '35cfa9ba-8633-46d3-896c-32591c0e0cfc')
 			{
-			$content ='<div class="redi_validation_error">This is a demo account. <br/>
-			You need to register to obtain your API key at <br/>
-			<a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx">http://www.reservationdiary.eu/ProviderHome/Register.aspx</a><br/>
-			<br/><br/>When you receive API key by email, please set it in admin panel of redi plugin.<br/></div>';
+				$content ='<div class="redi_validation_error">This is a demo account. <br/>'.
+				'You need to register to obtain your API key at <br/>'.
+				'<a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx">http://www.reservationdiary.eu/ProviderHome/Register.aspx</a><br/>'.
+				'<br/><br/>When you receive API key by email, please set it in admin panel of redi plugin.<br/></div>';
 			}
             $content .= '<!--{version:"'.$this->version.'"}--><form name="redi" method="post">';
             if ($_POST['submit'])
             {
-                if ($_POST['Name'] != "" && $_POST['Phone'] != "" && $_POST['Email'] != "")
+                if ($_POST['Name'] != '' && $_POST['Phone'] != '' && $_POST['Email'] != '')
                 {
 
                     $services = '';
@@ -95,7 +95,7 @@ if (!class_exists('ReDiReservation'))
                                 '&endDate='.urlencode($_POST['endDate'].' '.$_POST['endTime'])
                         );
 
-                        
+
                         $content.='<p class="redi_status_'.strtolower($return_json->Status).'">'.$return_json->Message.'</p>';
                         if($return_json->Status == 'SUCCESS')
                         {
@@ -104,28 +104,29 @@ if (!class_exists('ReDiReservation'))
                             <span class="redi_icon-print"></span>
                             Print reservation ticket
                             </div><br/>';
-                            $post_sucess = true;
+                            $post_success = true;
                         }
                     }
                     else
-                        $content.= '<b class="redi_validation_error">Data allready send.</b>';
+                        $content.= '<b class="redi_validation_error">Data already send.</b>';
                 } else
                 {
                     $content.= '<b class="redi_validation_error">Not all required fields are set.</b>';
-                }	
+                }
                 $content.='<br/>';
             }
 
-            if (!$post_sucess)
+            if (!$post_success)
             {
                 date_default_timezone_set('Europe/Minsk');
 
                 $places = $this->get('places');
-                $content .= $this->getplaces($places);
+                $content .= $this->getPlaces($places);
+
+	            $first_place = $places[0]->ID;
+	            $content .= '<input type="hidden" id="place_id" value="'.$first_place.'"/>';
 
                 $content .= '<div id="category_div">';
-                $first_place = $places[0]->ID;
-                $content .= '<input type="hidden" id="place_id" value="'.$first_place.'"/>';
                 $categories = $this->get('categories', '?placeid='.$first_place);
                 $content .= $this->getcategories($categories);
 
@@ -148,7 +149,7 @@ if (!class_exists('ReDiReservation'))
                 $content .= '<input type="text" value="'.$endDate.'" name="endDate" id="endDate"/> <input id="endTime" type="text" value="'.$endTime.'" name="endTime"/>';
                 $content .= '<br/><br/><label for="services_div">Services: </label><br/>';
                 $content .= $this->getservices($services, $first_category);
-				$content .= $this->getlegend();
+				$content .= $this->getLegend();
                 $content .= $this->user_info_form();
             }
             return $content.'</form>';
@@ -177,9 +178,6 @@ if (!class_exists('ReDiReservation'))
                 <label for="Comments">Comment</label><br>
                 <textarea rows="2" name="Comments" id="Comments" cols="20"></textarea>
             </div>
-            <div style="display: none;">
-                <input type="submit" id="Action" name="Action" value="book">
-            </div>
             <div style="margin-top: 30px; margin-bottom: 30px;">
                     <input id="submit" type="submit" value="make a reservation" name="submit">
             </div>
@@ -187,7 +185,7 @@ if (!class_exists('ReDiReservation'))
             return $content;
         }
 
-        public function getlegend()
+        public function getLegend()
 		{
 			$content = '            
 			<div class="table-info">
@@ -218,7 +216,7 @@ if (!class_exists('ReDiReservation'))
             $content = '';
             $content .='<div style="padding-left:300px; display:none; height:50px;" id="loader"><div id="loader_image"></div></div>';
             $content .= '<div id="services_div">';
-            
+
             $content .= '<input type="hidden" id="category_id" value="'.$first_category.'"/>';
             $content .='<table>';
 			foreach ((array)$services as $service)
@@ -234,7 +232,7 @@ if (!class_exists('ReDiReservation'))
 						)) ? 'disabled="disabled"' : '').' name="service[]" value="'.$service->ID.'" /></td>'.
 						'<td>'.$service->Name.'</td><td>'.$service->Comments.'</td></tr>';
 			}
-			
+
             $content .= '</table></div>';
 
             return $content;
@@ -252,7 +250,7 @@ if (!class_exists('ReDiReservation'))
 				}
 				$content.='</select>';
 			}
-	
+
             return $content;
         }
 
@@ -293,10 +291,8 @@ if (!class_exists('ReDiReservation'))
                 return json_decode($json);
         }
 
-        public function getplaces($places)
+        public function getPlaces($places)
         {
-			$places = $places[0];
-			
 			if(is_array($places) && count($places) > 1)
 			{
 				$content = '<br/><label for="place">Place: </label><br/><select name="place" id="place">';
@@ -436,7 +432,7 @@ if (!class_exists('ReDiReservation'))
                 <div class="icon32" id="icon-options-general"><br/></div>
                 <h2>Redi Reservation</h2>
 
-                           
+
                 <p>By default DEMO key is provided, so you can test reservation functionality without registration.</p>
                 <p>To optain you own API Key please register at <a href="http://www.reservationdiary.eu/ProviderHome/Register.aspx" target="_blank">Reservation Diary</a><br/>
                     After registration, you will receive API Key by email. Copy API Key into Redi Api Key field and click on Save Changes button.</p><br />

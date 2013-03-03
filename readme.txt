@@ -30,6 +30,9 @@ In case you have any problems with plugin installation or you need some customiz
 
 == Changelog ==
 
+= 13.0303 =
+* added selection for place if there are many
+
 = 12.1021 =
 * fixed bug when services was not reloaded correctly when category is changed
 * added cosmetic change, when user selects start date, end date is set to the same value
