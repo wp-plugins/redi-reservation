@@ -2,10 +2,7 @@
 /*
   Plugin Name: ReDi Reservation
   Plugin URI: http://reservationdiary.eu/eng/reservation-wordpress-plugin/
-  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurnats,
-  bars, saunas, photo studios, billiards, bowlings, yahts and so on to receive reservations from clients online.
-  Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation.
-  To activate: Create new page and place {redi} in page content.
+  Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurants, bars, saunas, photo studios, billiards, bowlings, yachts and so on to receive reservations from clients online. Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. To activate: Create new page and place {redi} in page content.
   Version: 13.0303
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
@@ -92,7 +89,8 @@ if (!class_exists('ReDiReservation'))
                                 '&comments='.urlencode($_POST['Comments']).
                                 $services.
                                 '&startDate='.urlencode($_POST['startDate'].' '.$_POST['startTime']).
-                                '&endDate='.urlencode($_POST['endDate'].' '.$_POST['endTime'])
+                                '&endDate='.urlencode($_POST['endDate'].' '.$_POST['endTime']).
+                                '&lang='.str_replace( '_', '-', get_locale() )
                         );
 
 
@@ -140,7 +138,8 @@ if (!class_exists('ReDiReservation'))
 
                 $services = $this->get(
                         'services', '?categoryid='.$first_category.'&startDate='.urlencode($startDate.' '.$startTime).
-                        '&endDate='.urlencode($endDate.' '.$endTime)
+                        '&endDate='.urlencode($endDate.' '.$endTime).
+                        '&lang='.str_replace( '_', '-', get_locale() )
                 );
 
                 $content .= '</div>';
@@ -254,7 +253,7 @@ if (!class_exists('ReDiReservation'))
         public function get($func, $params='')
         {
             $url = REDIAPI.$func.'/'.$this->options['key'].$params;
-            //var_dump($url);
+
             set_error_handler(
                     create_function(
                             '$severity, $message, $file, $line', 'throw new ErrorException($message, $severity, $severity, $file, $line);'
