@@ -1,8 +1,8 @@
 ﻿=== ReDi Reservation ===
 Contributors: thecatkin, robby.roboter
-Tags: reservation diary, reservation, table reservation, restaurnat reservation, bowling reservation, yacht reservation, photo studio reservation, billiard reservation, sauna reservation, car reservation, appartments reservation, hookah reservation, badminton reservation, tennis reservation, conference room reservation, karting reservation, bus reservation, time reservation
+Tags: reservation diary, reservation, table reservation, restaurant reservation, bowling reservation, yacht reservation, photo studio reservation, billiard reservation, sauna reservation, car reservation, apartments reservation, hookah reservation, badminton reservation, tennis reservation, conference room reservation, carting reservation, bus reservation, time reservation
 Requires at least: 3.0.0
-Tested up to: 3.4
+Tested up to: 4.0
 Stable tag: trunk
 
 Easy ReDi reservation plugin that allows you to easily manage reservations for your business.
@@ -30,6 +30,9 @@ In case you have any problems with plugin installation or you need some customiz
 
 == Changelog ==
 
+= 14.1122 =
+* added multilanguage support
+
 = 13.0303 =
 * added selection for place if there are many
 
@@ -50,7 +53,7 @@ In case you have any problems with plugin installation or you need some customiz
 * Added time picker
 * Added print of reservation ticket
 * Added styles for errors and reservation confirmation messages
-* Form is hided when reservation is accepted
+* Form hides when reservation is accepted
 
 = 12.0331 =
 * Fixed: Reservation Comments are not passing
