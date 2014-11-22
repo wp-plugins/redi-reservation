@@ -3,12 +3,12 @@
   Plugin Name: ReDi Reservation
   Plugin URI: http://reservationdiary.eu/eng/reservation-wordpress-plugin/
   Description: ReDi Reservation plugin allows you to manage reservations for your business. This plugin can help places such restaurants, bars, saunas, photo studios, billiards, bowlings, yachts and so on to receive reservations from clients online. Your clients will be able to see available space at specified time, and if it's available, client is able to make a reservation. To activate: Create new page and place {redi} in page content.
-  Version: 13.0303
+  Version: 14.1122
   Author: reservationdiary.eu
   Author URI: http://reservationdiary.eu/
  */
 
-define('REDIAPI', 'http://provider.reservationdiary.eu/eng/api2/');
+define('REDIAPI', 'http://provider.reservationdiary.eu/'.str_replace('_', '-', get_locale()).'/api2/');
 define('REDI_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('REDI_DEBUG', false);
 
@@ -18,7 +18,7 @@ if (!class_exists('ReDiReservation'))
     class ReDiReservation
     {
 
-        var $version = '13.0303';
+        var $version = '14.1122';
 
         /**
          * @var string The options string name for this plugin
@@ -89,8 +89,7 @@ if (!class_exists('ReDiReservation'))
                                 '&comments='.urlencode($_POST['Comments']).
                                 $services.
                                 '&startDate='.urlencode($_POST['startDate'].' '.$_POST['startTime']).
-                                '&endDate='.urlencode($_POST['endDate'].' '.$_POST['endTime']).
-                                '&lang='.str_replace( '_', '-', get_locale() )
+                                '&endDate='.urlencode($_POST['endDate'].' '.$_POST['endTime'])
                         );
 
 
@@ -138,8 +137,7 @@ if (!class_exists('ReDiReservation'))
 
                 $services = $this->get(
                         'services', '?categoryid='.$first_category.'&startDate='.urlencode($startDate.' '.$startTime).
-                        '&endDate='.urlencode($endDate.' '.$endTime).
-                        '&lang='.str_replace( '_', '-', get_locale() )
+                        '&endDate='.urlencode($endDate.' '.$endTime)
                 );
 
                 $content .= '</div>';
