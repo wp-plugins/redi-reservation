@@ -59,7 +59,7 @@ if (!class_exists('ReDiReservation'))
         {
             $post_success = false;
 			$content = '';
-			if($this->options['key'] == '35cfa9ba-8633-46d3-896c-32591c0e0cfc')
+			if(trim($this->options['key']) == '35cfa9ba-8633-46d3-896c-32591c0e0cfc')
 			{
 				$content ='<div class="redi_validation_error">This is a demo account. <br/>'.
 				'You need to register to obtain your API key at <br/>'.
@@ -250,7 +250,7 @@ if (!class_exists('ReDiReservation'))
 
         public function get($func, $params='')
         {
-            $url = REDIAPI.$func.'/'.$this->options['key'].$params;
+            $url = REDIAPI.$func.'/'.trim($this->options['key']).$params;
 
             set_error_handler(
                     create_function(
@@ -259,7 +259,7 @@ if (!class_exists('ReDiReservation'))
             );
 
             try
-            {
+            {				
                 $json = @file_get_contents($url, 0, null, null);
             } catch (Exception $e)
             {
@@ -278,7 +278,7 @@ if (!class_exists('ReDiReservation'))
 
         public function put($func, $params)
         {
-            $url = REDIAPI.$func.'?apikey='.$this->options['key'].$params;
+            $url = REDIAPI.$func.'?apikey='.trim($this->options['key']).$params;
 
             $json = @file_get_contents($url, 0, null, null);
             if ($json)
@@ -414,7 +414,7 @@ if (!class_exists('ReDiReservation'))
             if (isset($_POST['wp_redi_save']))
             {
 
-                $this->options['key'] = $_POST['key'];
+                $this->options['key'] = trim($_POST['key']);
 
                 $this->save_admin_options();
 
@@ -445,7 +445,7 @@ if (!class_exists('ReDiReservation'))
                     <table class="form-table">
                         <tr valign="top">
                             <th scope="row">API Key</th>
-                            <td><input name="key" type="text" id="key" size="40" value="<?php echo stripslashes(htmlspecialchars($this->options['key'])); ?>"/>
+                            <td><input name="key" type="text" id="key" size="40" value="<?php echo stripslashes(htmlspecialchars(trim($this->options['key']))); ?>"/>
                                 <span class="description">API Key to access reservation functionality</span></td>
                         </tr>
 
